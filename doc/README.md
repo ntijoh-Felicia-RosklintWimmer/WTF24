@@ -1,12 +1,9 @@
-# Projektets Namn
+# BokTips
 
 ## Beskrivning
 
-Här beskriver du applikationens funktionalitet.
+BokTips kommer kunna recensera böckerna, lägga till nya böcker (som admin), veta vilken genre en bok tillhör samt se beskrivningen av boken. Admin kommer även kunna ta bort kommentarer och hela böcker. Som användare kan man även ha en egen profil där man kan se böcker man gillar eller vill läsa. Man kommer även kunna söka efter olika titlar.
 
-### Exempel (ta bort)
-
-Book-O-Matic är en applikation där användare kan skapa virtuella bokhyllor. De kan mata in vilka böcker de har, och information om dessa. Man kan betygssätta böcker och skriva kommentarer. Om en bok är inlagd av en annan användare kan andra användare lägga till den i "sin" bokhylla, och skriva egna kommentarer och recensioner och sätta egna betyg. Man kan söka efter titlar och se kommentarer, recensioner och betyg
 
 ## Användare och roller
 
