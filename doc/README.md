@@ -7,16 +7,9 @@ BokTips kommer kunna recensera böckerna, lägga till nya böcker (som admin), v
 
 ## Användare och roller
 
-Här skriver du ner vilka typer av användare (som i inloggade användare) det finns, och vad de har för rättigheter, det vill säga, vad de kan göra (tänk admin, standard användare, etc).
-
-### Exempel (ta bort)
-
-Gästanvändare - oinloggad
-. Kan söka efter titlar och se genomsnittligt betyg. Kan inte se eller skriva kommentarer eller sätta egna betyg.
-
-Standardanvändare - inloggad. Kan allt gästanvändare kan, men kan även lägga in nya böcker och skriva kommentarer etc. Kan ta bort sitt eget konto och information kopplat till det.
-
-Adminanvändare - kan ta bort/editera böcker, kommentarer och användare.
+Admin - Lägga till nya böcker att välja mellan, ta bort kommentarer
+Användare - Ha en egen profil, recensera böckerna, lägga till böckerna i en personlig lista
+Gästanvändare (alla) - Se och söka efter böcker, läsa kommentarerna
 
 ## ER-Diagram
 
