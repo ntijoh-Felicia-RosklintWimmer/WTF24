@@ -13,14 +13,10 @@ Gästanvändare (alla) - Se och söka efter böcker, läsa kommentarerna
 
 ## ER-Diagram
 
-![Er-Diagram](./er_diagram.png?raw=true "ER-diagram")
+![Er-Diagram]()
 
 ## Gränssnittsskisser
 
 **Login**
 
-![Er-Diagram](./ui_login.png?raw=true "ER-diagram")
-
 **Visa bok**
-
-![Er-Diagram](./ui_show_book.png?raw=true "ER-diagram")
