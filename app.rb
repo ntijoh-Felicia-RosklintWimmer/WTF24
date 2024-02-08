@@ -10,6 +10,7 @@ class App < Sinatra::Base
     end
 end
 
+
 #Sida 1.0
     #Se info om sidan
     #Länka till inloggning
@@ -21,6 +22,11 @@ end
 #Sida 1.3 Logga in admin
 
 #Sida 2.0 Alla böcker (tänk julkalendern)
+
+get '/' do
+    @result = db.execute('SELECT * FROM garden')
+    erb :'Create/index'
+end
 
 #Sida 2.1 Bok med titel, komentarer, rekomendation
 
