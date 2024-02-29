@@ -1,0 +1,21 @@
+button {
+    padding: 5px;
+    font: bold 0.6em sans-serif;
+    border: 2px solid #2f2f2f;
+    border-radius: 5px;
+    background: none;
+    cursor: pointer;
+    transform: rotate(0deg);
+    align-items: center;
+}
+
+button:after {
+    content: " >>";
+}
+
+button:hover,
+button:focus {
+    outline: none;
+    color: #fffefe;
+    background: rgba(70, 0, 90, 0.723);
+}
