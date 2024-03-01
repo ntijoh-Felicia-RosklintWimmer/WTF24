@@ -10,6 +10,7 @@ class Seeder
 
     def self.drop_tables
         db.execute('DROP TABLE IF EXISTS bocker')
+        db.execute('DROP TABLE IF EXISTS users')
     end
 
     def self.create_tables
@@ -17,6 +18,11 @@ class Seeder
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             description TEXT
+        )')
+        db.execute('CREATE TABLE users(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            mail TEXT NOT NULL
         )')
     end
 
