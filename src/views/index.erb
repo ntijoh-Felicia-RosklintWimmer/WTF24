@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BokTips! </title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="public/css/style.css">
 </head>
 
 <body>
@@ -12,49 +12,48 @@
     <header>
         <h1>Skapa ditt konto</h1>
     </header>
+  
+    <nav class="menu"> 
 
-
-        <div class="fade-layer"></div>
-    <div class="wrapper">
-        <div class="menu-button">
-            <i class="material-icons">menu</i>
-        </div>
-    </div>
-            
-    <nav class="menu">
         <ul>
             <li><h3>Info sidor</h3></li>
-            <li><a href="index.html">Lite om oss</a></li>
+            <li><a href="om-oss/about.erb">Lite om oss</a></li>
             <li><a href="profil/index.html">Alla böcker</a></li>
             <li><a href="sida3.html">Profil</a></li>
         </ul>
     </nav>
-
-    <script src="js/allt.js"></script>    
-    <form action="/user" method="post">
-        <div class="form-list">
-            <ul>
-                <li>
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="user_name" >
-                </li>
-                <li>
-                    <label for="mail">Email:</label>
-                    <input type="email" id="mail" name="user_email" >
-                </li>
-                <li>
-                    <label for="password">Lösenord:</label>
-                    <input type="Password" id="mail" name="Password" >
-                </li>
-            </ul>
-            <div class="button">
-                <button type="submit" value="submit">Create account</button>
-            </div>
-            <div class="message">
-                
-            </div>
+    <div class="fade-layer"></div>
+    <div class="wrapper">
+        <div class="menu-button">
+            <i class="material-icons">menu</i>
         </div>
-    </form>
+    </div>  
+    
+    <main>
+        <form action="/user" method="post">
+            <div class="form-list">
+                <ul>
+                    <li>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="user_name" >
+                    </li>
+                    <li>
+                        <label for="mail">Email:</label>
+                        <input type="email" id="mail" name="user_email" >
+                    </li>
+                    <li>
+                        <label for="password">Lösenord:</label>
+                        <input type="Password" id="mail" name="Password" >
+                    </li>
+                </ul>
+                <div class="button">
+                    <button type="submit" value="submit">Create account</button>
+                </div>
+                <div class="message">
+                
+                </div>
+            </div>
+        </form>
 
     </main>
 
@@ -64,5 +63,5 @@
         <p>Mail: BokTips@mail.com</p>
     </footer>
 
-    <script src="js/allt.js"></script>
+    <script src="public/js/allt.js"></script>
 </body>

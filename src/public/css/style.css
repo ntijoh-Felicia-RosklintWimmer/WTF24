@@ -1,3 +1,96 @@
+body {
+    display: grid;
+    margin: 0px;
+    padding: 20px;
+    display: grid;
+    min-height: 9vh;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    grid-template-columns: 100%;
+    grid-template-rows: 20% 10% 55% 18%;
+    grid-template-areas:
+        'hd'
+        'nv'
+        'mn'
+        'ft';
+}
+
+header {
+    display: grid;
+    grid-area: hd;
+    padding: 15px;
+}
+
+header h1{
+    align-self: center;
+}
+
+
+nav {
+    display: grid;
+    grid-area: nv;
+    padding: 5px;
+}
+
+nav ul li a:hover {
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgb(0, 0, 0),
+        0 0 5px rgb(0, 0, 0);
+    font-size: larger;
+}
+
+
+.menu {
+    height: 100vh;
+    width: 20vw;
+    position: absolute;
+    top: 0;
+    left: -50vw;
+    transition: left 0.3s;
+    box-shadow: 10px 0px 21px -10px rgba(0, 0, 0, 0.5);
+}
+
+.menu-button {
+    cursor: pointer;
+    display: inline;
+} 
+
+.fade-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    z-index: 5;
+}
+
+.menu-button i.material-icons {
+    font-size: 2.5rem;
+}
+.material-icons {
+    visibility: visible;
+}
+.show {
+    left: 0;
+}
+
+
+main {
+    grid-area: mn;
+    padding: 5px;
+}
+
+footer {
+    display: flex;
+    grid-area: ft;
+    flex-direction: column;
+    padding: 20px;
+}
+
+
+/* Forumlär */
+
 button {
     padding: 5px;
     font: bold 0.6em sans-serif;
@@ -18,75 +111,4 @@ button:focus {
     outline: none;
     color: #fffefe;
     /* background: rgba(70, 0, 90, 0.723); */
-}
-
-
-.menu {
-    height: 100vh;
-    width: 20vw;
-    /* background: rgb(246, 171, 208); */
-    position: absolute;
-    top: 0;
-    left: -50vw;
-    /* left:-90vw alt. */
-    transition: left 0.3s;
-    box-shadow: 10px 0px 21px -10px rgba(0, 0, 0, 0.5);
-    /* z-index: 1; */
-    /* z-index: 10 */
-}
-
-.menu-button {
-    cursor: pointer;
-    display: inline;
-} 
-
-.fade-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: none;
-    z-index: 5;
-}
-
-
-body {
-    display: grid;
-    margin: 0px;
-    padding: 20px;
-    display: grid;
-    min-height: 9vh;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    grid-template-columns: 100%;
-    grid-template-rows: 10% 10% 60% 22%;
-    grid-template-areas:
-        'hd'
-        'nv'
-        'mn'
-        'ft';
-}
-
-header {
-    display: grid;
-    grid-area: hd;
-    padding: 5px;
-}
-
-nav {
-    display: grid;
-    grid-area: nv;
-    padding: 5px;
-}
-
-main {
-    grid-area: mn;
-    padding: 5px;
-}
-
-footer {
-    display: flex;
-    grid-area: ft;
-    flex-direction: column;
-    padding: 20px;
 }

@@ -1,5 +1,5 @@
 require 'debug'
-require_relative 'db/seed   '
+require_relative 'db/seed'
 class App < Sinatra::Base
 
     def db
@@ -46,6 +46,9 @@ class App < Sinatra::Base
 
 #Sida 1.0
     #Se info om sidan
+    get '/about' do
+        erb :'om-oss/about'
+    end
     #Länka till inloggning
 
 #Sida 1.1 Skapa konto
