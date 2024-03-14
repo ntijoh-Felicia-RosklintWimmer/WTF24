@@ -2,6 +2,8 @@ require 'debug'
 require_relative 'db/seed'
 class App < Sinatra::Base
 
+    enable :sessions
+
     def db
         if @db == nil
             @db = SQLite3::Database.new('db/bocker.sqlite')#Sätt in namnet på databasen
@@ -22,26 +24,37 @@ class App < Sinatra::Base
     end
     
     get '/user/:id' do |user_id|  
-        @user = db.execute('SELECT * FROM users WHERE id = ?', user_id) 
-        erb :'profil/index' 
+        @user = db.execute('SELECT * FROM users WHERE id = ?', user_id).first
+        erb :'userpage' 
     end
 
-    post '/user' do
-        name = params['user']  
-        mail = params['mail']
-        query = 'INSERT INTO users (name, mail) VALUES (?,?) RETURNING id'
-        result = db.execute(query, name, mail).first 
-        redirect "/users/#{result['id']}" 
+    post '/user/signup' do
+        name = params['user_name']
+        mail = params['user_email']
+        password = params['password']
+        hashed_password = BCrypt::Password.create(password)
+        id = db.execute('INSERT INTO users (name, mail, password) VALUES (?,?,?) RETURNING *', name, mail, hashed_password).first['id']
+        session[:user_id] = id
+        redirect "/user/#{id}" 
     end
 
-    enable :sessions
+    post '/user/login' do
+        mail = params['user_email']
+        password = params['password']
+        user = db.execute('SELECT * FROM users WHERE mail = ?', mail).first
+        password_from_db = BCrypt::Password.new(user['password'])
+        session[:user_id] = user["id"]
 
-    get '/' do
-      session[:user_id] = 1 
+        if password_from_db == password 
+            session[:user_id] = user['id'] 
+            # Log in?
+          else
+            # id = null
+          end
     end
-  
-    get '/home' do
-      user_id = session[:user_id] 
+
+    get '/users' do 
+        redirect "/user/#{session[:user_id]}"
     end
 
 #Sida 1.0
@@ -51,9 +64,9 @@ class App < Sinatra::Base
     end
     #Länka till inloggning
 
-#Sida 1.1 Skapa konto
+#Sida 1.1 Skapa konto - Klart
 
-#Sida 1.2 Logga in användare
+#Sida 1.2 Logga in användare - fungerar inte riktigt
 
 #Sida 1.3 Logga in admin
 
