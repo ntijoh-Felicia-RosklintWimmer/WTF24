@@ -1,0 +1,10 @@
+<% if @bocker %>
+    <% @bocker.each do |bok|%>
+        <h2> <%= bok['name'] %> </h2>
+        <p>Author: <%= bok['Author'] %></p>
+        <p>description: <%= bok['description'] %></p>
+    <% end%>
+  <p><a href="/bocker">Show me all bocker!</a></p>
+<% else %>
+  <p>No books found.</p>
+<% end %>

@@ -78,22 +78,42 @@ class App < Sinatra::Base
 #Sida 1.0
     #Se info om sidan
     get '/about' do
-        erb :'om-oss/about'
+        erb :'about'
     end
     #Länka till inloggning
 
 #Sida 1.1 Skapa konto - Klart
 
-#Sida 1.2 Logga in användare - fungerar inte riktigt
+#Sida 1.2 Logga in användare - klart
 
-#Sida 1.3 Logga in admin
+#Sida 1.3 Logga in admin - ej klart 
 
-#Sida 2.0 Alla böcker (tänk julkalendern)
+#Sida 2.0 Alla böcker 
 
+    # get '/bocker/:id' do |bocker_id|
+    #     @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', bocker_id.to_i).first
+    #     erb :'show_bok'
+    # end
+
+    get '/bocker' do
+        @bocker = db.execute('SELECT * FROM bocker')
+        erb :'bocker'
+    end
 #Sida 2.1 Bok med titel, komentarer, rekomendation
 
 #Sida 3.0 Profil inloggad användare
 
 #Sida 3.1 Profil admin
+
+#Helps so no html works in comments
+    helpers do
+        def h(text)
+            Rack::Utils.escape_html(text)
+        end
+
+        def hattr(text)
+            Rack::Utils.escape_path(text)
+        end
+    end
 
 end

@@ -19,6 +19,17 @@ class Seeder
             name TEXT NOT NULL,
             description TEXT
         )')
+        db.execute('CREATE TABEL Writers(
+            "id"	INTEGER UNIQUE,
+            "Name"	TEXT NOT NULL,
+            PRIMARY KEY("id")'
+        )
+        db.execute('CREATE TABLE "bok_wri" (
+            "id"	INTEGER,
+            "Bok"	TEXT NOT NULL,
+            "Author"	TEXT NOT NULL,
+            PRIMARY KEY("id")'
+        )
         db.execute('CREATE TABLE users(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
