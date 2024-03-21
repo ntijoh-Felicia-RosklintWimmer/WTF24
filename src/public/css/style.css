@@ -23,12 +23,28 @@ header {
 header h1{
     align-self: center;
 }
+div .wrapper{
+    width: 35px;
+    height: 5px;
+    background-color: black;
+    margin: 6px;
+}
 
-
-nav {
+nav .menu{
     display: grid;
     grid-area: nv;
     padding: 5px;
+    grid-template-columns: 100%;
+    grid-template-rows: 30% 30% 30%;
+    grid-template-areas:
+    'a''a''a'
+}
+
+nav .menu a{
+    align-items: center;
+    align-content: center;
+    padding-left: 20px;
+    size: 300%;
 }
 
 nav ul li a:hover {
@@ -65,7 +81,7 @@ nav ul li a:hover {
     z-index: 5;
 }
 
-.menu-button i.material-icons {
+.menu-button i .material-icons {
     font-size: 2.5rem;
 }
 .material-icons {
@@ -111,4 +127,12 @@ button:focus {
     outline: none;
     color: #fffefe;
     /* background: rgba(70, 0, 90, 0.723); */
+}
+
+.formbox{
+    border: 5px;
+    border-color: purple;
+    border-style: dashed;
+    display: flex;
+    flex-direction: column;
 }

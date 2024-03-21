@@ -1,0 +1,23 @@
+<body>
+    <main>
+         <h4>Skapa ditt konto</h4>
+        <form class="formbox" action="/user/signup" method="post">
+                <label for="name">Name:</label><input type="text" id="name" name="user_name" ><br />
+                <label for="mail">Email:</label><input type="email" id="mail" name="user_email" ><br />
+                <label for="password">Lösenord:</label><input type="Password" id="mail" name="password" ><br />
+                
+                <select name="status" id="">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                    
+                <div class="button">
+                    <button type="submit" value="submit">Create account</button>
+                </div>
+                <div class="message"></div>
+            </form>
+
+            <p>Have an account?<a href="/">Login in here</a></p>
+    </main>
+
+</body>

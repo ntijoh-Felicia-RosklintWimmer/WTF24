@@ -38,5 +38,3 @@ class Seeder
         puts "Seed complete"
     end
 end
-
-Seeder.seed!

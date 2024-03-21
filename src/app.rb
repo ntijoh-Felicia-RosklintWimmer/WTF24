@@ -28,6 +28,14 @@ class App < Sinatra::Base
         erb :'userpage' 
     end
 
+    get '/signup' do
+        erb :signup
+    end
+
+    get '/login' do
+        erb :index
+    end
+
     post '/user/signup' do
         name = params['user_name']
         mail = params['user_email']
@@ -42,15 +50,25 @@ class App < Sinatra::Base
         mail = params['user_email']
         password = params['password']
         user = db.execute('SELECT * FROM users WHERE mail = ?', mail).first
+        
+        if user == nil
+            p "No user found"
+            redirect "/user/login"
+        end
+
         password_from_db = BCrypt::Password.new(user['password'])
-        session[:user_id] = user["id"]
 
         if password_from_db == password 
             session[:user_id] = user['id'] 
-            # Log in?
-          else
-            # id = null
-          end
+            redirect "/user/#{session[:user_id]}"
+        else
+            p "Failed login"
+            redirect "/login/login"
+        end
+    end
+
+    post '/user/logout' do 
+        session.destroy
     end
 
     get '/users' do 

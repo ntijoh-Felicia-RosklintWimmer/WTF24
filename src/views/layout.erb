@@ -6,8 +6,24 @@
     <title>BokTips</title>
 </head>
 <body>
-    <%# <header><h1>Välkommen till BokTips</h1></header> %>
+    <nav class="menu"> 
+        <ul>
+            <h3>Info sidor</h3>
+            <a href="om-oss/about.erb">Lite om oss</a><br />
+            <a href="bocker/index.erb">Alla böcker</a><br />
+            <a href="userpage.erb">Profil</a><br />
+        </ul>
+    </nav>
+
     <%= yield %>
     <span></span>
+
+    <footer>
+        <p>Adress: Hattmakargatan</p>
+        <p>Telefon: 070777070707070</p>
+        <p>Mail: BokTips@mail.com</p>
+    </footer>
+
+    <script src="public/js/allt.js"></script>
 </body>
 </html>
