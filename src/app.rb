@@ -97,8 +97,15 @@ class App < Sinatra::Base
     #     erb :'show_bok'
     # end
 
-    get '/bocker' do
+    get '/bocker' do 
         @bocker = db.execute('SELECT * FROM bocker')
+        erb :'bocker'
+    end
+
+    get '/bocker/:bok' do |bok|
+        print("id " + bok)
+        @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', bok)
+        @sing = 1
         erb :'bocker'
     end
 

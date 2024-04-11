@@ -1,10 +1,21 @@
-<% if @bocker %>
-    <% @bocker.each do |bok|%>
-        <h2> <%= bok['name'] %> </h2>
-        <p>Author: <%= bok['Author'] %></p>
-        <p>description: <%= bok['description'] %></p>
-    <% end%>
-  <p><a href="/bocker">Show me all bocker!</a></p>
+<% if @sing == nil %>
+  <% if @bocker %>
+      <% @bocker.each do |bok|%>
+          <h2> <a href="/bocker/<%=bok['id']%>"><%= bok['name'] %></a></h2>
+      <% end%>
+    <p><a href="/bocker">Show me all bocker!</a></p>
+  <% else %>
+    <p>No books found.</p>
+  <% end %>
 <% else %>
-  <p>No books found.</p>
+  <% if @bocker %>
+      <% @bocker.each do |bok|%>
+          <h2> <%= bok['name'] %> </h2>
+          <p>Author: <%= bok['Author'] %></p>
+          <p>Description: <%= bok['description'] %></p>
+      <% end%>
+    <p><a href="/bocker">Show me all bocker!</a></p>
+  <% else %>
+    <p>No books found.</p>
+  <% end %>
 <% end %>
