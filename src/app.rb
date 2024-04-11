@@ -25,7 +25,9 @@ class App < Sinatra::Base
     
     get '/user/:id' do |user_id|  
         @user = db.execute('SELECT * FROM users WHERE id = ?', user_id).first
-        erb :'userpage' 
+        # @bok_user = db.execute('SELECT * FROM bok_user WHERE Id = ?', session[:user_id])
+        erb :'userpage'
+
     end
 
     get '/signup' do
@@ -53,7 +55,7 @@ class App < Sinatra::Base
         
         if user == nil
             p "No user found"
-            redirect "/user/login"
+            redirect "/login/login"
         end
 
         password_from_db = BCrypt::Password.new(user['password'])
@@ -99,9 +101,25 @@ class App < Sinatra::Base
         @bocker = db.execute('SELECT * FROM bocker')
         erb :'bocker'
     end
+
+    # get '/bocker/new' do 
+    #     erb :'new'
+    # end
+
+    # post '/bocker/add' do 
+    #   p params
+    #   name = params['name']
+    #   desc = params['about']
+    #   query = 'INSERT INTO bocker (name, about) VALUES (?,?) RETURNING *'
+    #   result = db.execute(query, name, description).first 
+    #   redirect "/bocker" 
+    # end
 #Sida 2.1 Bok med titel, komentarer, rekomendation
 
 #Sida 3.0 Profil inloggad användare
+    # post '/user/profile' do 
+
+    # end
 
 #Sida 3.1 Profil admin
 
