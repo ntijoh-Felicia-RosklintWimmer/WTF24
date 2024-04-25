@@ -110,35 +110,35 @@ class App < Sinatra::Base
         erb :'bocker'
     end
 
-    post '/bocker/add_new' do 
+
+    # Använd kortare routs som bara new
+    # Skapa if satser så att formuläret inte ens är synligt för användare utan log in
+    # Skapa mappar för olika funktioner i app
+    # skapa mappar för olika new, add osv för comment, böcker, writers osv.
+    post '/bocker/new' do 
         p params
         name = params['name']
         author = params['author']
         description = params['description']
         db.execute('INSERT INTO bocker (name, author, description) VALUES (?,?,?)', name, author, description)
         #result = db.execute(name, author, description).first 
-        redirect "/bocker" 
+        redirect "/bocker/index" 
     end
 
-    get '/bocker/:id/edit-bocker' do |id| 
+    get '/bocker/index/:id/edit' do |id| 
           @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', id.to_i).first
-          erb :'edit-bocker'
+          erb :'bocker/edit'
     end 
 
-    post '/bocker/:id/update' do |id| 
-        artist = params['content']
+    post '/bocker/index/:id/update' do |id| 
+        bocker = params['content']
         db.execute('UPDATE bocker SET (content = ?) WHERE id = ?', bok, id)
-        redirect "/bocker/#{id}" 
+        redirect "/bocker/index/#{id}" 
     end
 
-    post '/bocker/:id/delete' do |id| 
+    post '/bocker/index/:id/delete' do |id| 
         db.execute('DELETE FROM bocker WHERE id = ?', id)
-            redirect "/bocker/"
-    end
-
-    get '/bocker/:id' do |bok_id|
-        @selected_bok = db.execute('SELECT * FROM bocker WHERE id = ?', bokt_id.to_i).first
-        erb :'test-to-show-book'
+        redirect "/bocker/"
     end
 
 #Sida 2.1 Bok med titel, komentarer, rekomendation

@@ -36,6 +36,13 @@ class Seeder
             mail TEXT NOT NULL,
             password TEXT NOT NULL
         )')
+        db.execute('CREATE TABLE "bok_user" (
+            "id"	INTEGER,
+            "comment"	TEXT NOT NULL,
+            "rating"	INTEGER NOT NULL,
+            "username"   TEXT NOT NULL,
+            PRIMARY KEY("id")'
+        )
     end
 
     def self.seed_data

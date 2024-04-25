@@ -1,0 +1,8 @@
+<form action='/messages/<%=@message['id']%>/update' method='post'> 
+  <input type='text' name='content' value='<%= @message['content']%>'></input> 
+  <button type='submit'>Send</button>
+</form>
+
+<form action='/messages/<%= @message['id'] %>/delete' method='post'> 
+  <button type="submit">DELETE</button>
+</form>
