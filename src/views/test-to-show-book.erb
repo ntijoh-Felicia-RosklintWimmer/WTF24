@@ -1,0 +1,7 @@
+<% if @selected_bok %>
+  <h2> <%= @selected_bok['name'] %> </h2>
+  <p><%= @selected_bok['about'] %></p>
+  <p><a href="/bocker">Show me all bocker!</a></p>
+<% else %>
+  <p>Book not found.</p>
+<% end %>

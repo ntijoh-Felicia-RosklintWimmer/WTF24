@@ -23,6 +23,8 @@ class App < Sinatra::Base
         redirect "/"
     end
     
+
+    #Sida 1.1 Skapa konto/logga in - Klart
     get '/user/:id' do |user_id|  
         @user = db.execute('SELECT * FROM users WHERE id = ?', user_id).first
         # @bok_user = db.execute('SELECT * FROM bok_user WHERE Id = ?', session[:user_id])
@@ -84,10 +86,6 @@ class App < Sinatra::Base
     end
     #Länka till inloggning
 
-#Sida 1.1 Skapa konto - Klart
-
-#Sida 1.2 Logga in användare - klart
-
 #Sida 1.3 Logga in admin - ej klart 
 
 #Sida 2.0 Alla böcker 
@@ -96,6 +94,9 @@ class App < Sinatra::Base
     #     @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', bocker_id.to_i).first
     #     erb :'show_bok'
     # end
+    get '/bocker/add_new' do 
+        erb :'add_new'
+    end
 
     get '/bocker' do 
         @bocker = db.execute('SELECT * FROM bocker')
@@ -109,18 +110,37 @@ class App < Sinatra::Base
         erb :'bocker'
     end
 
-    # get '/bocker/new' do 
-    #     erb :'new'
-    # end
+    post '/bocker/add_new' do 
+        p params
+        name = params['name']
+        author = params['author']
+        description = params['description']
+        db.execute('INSERT INTO bocker (name, author, description) VALUES (?,?,?)', name, author, description)
+        #result = db.execute(name, author, description).first 
+        redirect "/bocker" 
+    end
 
-    # post '/bocker/add' do 
-    #   p params
-    #   name = params['name']
-    #   desc = params['about']
-    #   query = 'INSERT INTO bocker (name, about) VALUES (?,?) RETURNING *'
-    #   result = db.execute(query, name, description).first 
-    #   redirect "/bocker" 
-    # end
+    get '/bocker/:id/edit-bocker' do |id| 
+          @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', id.to_i).first
+          erb :'edit-bocker'
+    end 
+
+    post '/bocker/:id/update' do |id| 
+        artist = params['content']
+        db.execute('UPDATE bocker SET (content = ?) WHERE id = ?', bok, id)
+        redirect "/bocker/#{id}" 
+    end
+
+    post '/bocker/:id/delete' do |id| 
+        db.execute('DELETE FROM bocker WHERE id = ?', id)
+            redirect "/bocker/"
+    end
+
+    get '/bocker/:id' do |bok_id|
+        @selected_bok = db.execute('SELECT * FROM bocker WHERE id = ?', bokt_id.to_i).first
+        erb :'test-to-show-book'
+    end
+
 #Sida 2.1 Bok med titel, komentarer, rekomendation
 
 #Sida 3.0 Profil inloggad användare

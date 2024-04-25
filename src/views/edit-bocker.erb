@@ -1,0 +1,19 @@
+<form action='/messages/<%=@message['id']%>/update' method='post'> 
+  <input type='text' name='content' value='<%= @message['content']%>'></input> 
+  <button type='submit'>Send</button>
+</form>
+
+<form action='/messages/<%= @message['id'] %>/delete' method='post'> 
+  <button type="submit">DELETE</button>
+</form>
+
+
+<>
+Rate this book:
+1 <input type="radio" name="rating" value="1" />
+2 <input type="radio" name="rating" value="2" />
+3 <input type="radio" name="rating" value="3" />
+4 <input type="radio" name="rating" value="4" />
+5 <input type="radio" name="rating" value="5" />
+ <button type='submit'>Add the rating</button> </form>
+</div> 
