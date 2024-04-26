@@ -33,11 +33,11 @@ class App < Sinatra::Base
     end
 
     get 'signup' do
-        erb :'user_related/signup'
+        erb :'signup'
     end
 
     get 'login' do
-        erb :'user_related/index'  
+        erb :'index'  
     end
 
     post '/user/signup' do
@@ -73,12 +73,18 @@ class App < Sinatra::Base
         end
     end
 
-    post '/user_related/user/logout' do 
+    post '/user/logout' do 
         session.destroy
+        redirect "/"
     end
-
-    get '/users' do 
-        redirect "/user/#{session[:user_id]}"
+    
+    get '/user' do 
+        if session[:user_id] != nil
+            redirect "/user/#{session[:user_id]}"
+        else
+            redirect "/"
+        end
+        
     end
 
 #Sida 1.0
@@ -92,7 +98,11 @@ class App < Sinatra::Base
 
 #Sida 2.0 Alla böcker 
     get '/bocker/new' do 
-        erb :'bocker/new'
+        if session[:user_id] != nil
+            redirect 'bocker/new'
+        else
+            redirect "/bocker/index"
+        end
     end
 
     get '/bocker/index' do 
@@ -100,11 +110,11 @@ class App < Sinatra::Base
         erb :'bocker/index'
     end
 
-    get '/bocker/:bok' do |bok|
+    get '/bocker/index/:bok' do |bok|
         print("id " + bok)
         @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', bok)
         @sing = 1
-        erb :'bocker/index'
+        erb :'/bocker/index'
     end
 
 
@@ -119,21 +129,31 @@ class App < Sinatra::Base
         description = params['description']
         db.execute('INSERT INTO bocker (name, author, description) VALUES (?,?,?)', name, author, description)
         #result = db.execute(name, author, description).first 
-        redirect "/bocker/index" 
+        redirect "/bocker/new" 
     end
 
     get '/bocker/index/:id/edit' do |id| 
-          @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', id.to_i).first
-          erb :'bocker/edit'
+        if session[:user_id] == nil
+            redirect "/bocker/index"
+        end
+        @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', id.to_i).first
+        erb :'bocker/edit'
     end 
 
     post '/bocker/index/:id/update' do |id| 
+        if session[:user_id] == nil
+            redirect "/"
+        end
         bocker = params['content']
         db.execute('UPDATE bocker SET (content = ?) WHERE id = ?', bok, id)
         redirect "/bocker/index/#{id}" 
     end
 
     post '/bocker/index/:id/delete' do |id| 
+        if session[:user_id] == nil
+            redirect "/"
+        end
+
         db.execute('DELETE FROM bocker WHERE id = ?', id)
         redirect "/bocker/"
     end
@@ -148,6 +168,20 @@ class App < Sinatra::Base
 #Sida 3.1 Profil admin
 
 #Helps so no html works in comments
+
+    # get '/comment/new' do 
+    #     # ...
+    # end
+
+    # post '/comment/new' do 
+    #     p params
+    #     name = params['name']
+    #     description = params['description']
+    #     db.execute('INSERT INTO bok_user (name, description) VALUES (?,?)', name, description)
+    #     #result = db.execute(name, author, description).first 
+    #     redirect "/comment/new" 
+    # end
+
     helpers do
         def h(text)
             Rack::Utils.escape_html(text)
