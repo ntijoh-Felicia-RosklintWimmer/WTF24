@@ -32,12 +32,12 @@ class App < Sinatra::Base
 
     end
 
-    get '/signup' do
-        erb :signup
+    get 'signup' do
+        erb :'user_related/signup'
     end
 
-    get '/login' do
-        erb :index
+    get 'login' do
+        erb :'user_related/index'  
     end
 
     post '/user/signup' do
@@ -47,6 +47,7 @@ class App < Sinatra::Base
         hashed_password = BCrypt::Password.create(password)
         id = db.execute('INSERT INTO users (name, mail, password) VALUES (?,?,?) RETURNING *', name, mail, hashed_password).first['id']
         session[:user_id] = id
+        # redirect "/user/#{id}" #tidigare
         redirect "/user/#{id}" 
     end
 
@@ -57,7 +58,8 @@ class App < Sinatra::Base
         
         if user == nil
             p "No user found"
-            redirect "/login/login"
+            # redirect "/login/login" tidigare
+            redirect "signup"
         end
 
         password_from_db = BCrypt::Password.new(user['password'])
@@ -67,11 +69,11 @@ class App < Sinatra::Base
             redirect "/user/#{session[:user_id]}"
         else
             p "Failed login"
-            redirect "/login/login"
+            redirect "/"
         end
     end
 
-    post '/user/logout' do 
+    post '/user_related/user/logout' do 
         session.destroy
     end
 
@@ -89,25 +91,20 @@ class App < Sinatra::Base
 #Sida 1.3 Logga in admin - ej klart 
 
 #Sida 2.0 Alla böcker 
-
-    # get '/bocker/:id' do |bocker_id|
-    #     @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', bocker_id.to_i).first
-    #     erb :'show_bok'
-    # end
-    get '/bocker/add_new' do 
-        erb :'add_new'
+    get '/bocker/new' do 
+        erb :'bocker/new'
     end
 
-    get '/bocker' do 
+    get '/bocker/index' do 
         @bocker = db.execute('SELECT * FROM bocker')
-        erb :'bocker'
+        erb :'bocker/index'
     end
 
     get '/bocker/:bok' do |bok|
         print("id " + bok)
         @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', bok)
         @sing = 1
-        erb :'bocker'
+        erb :'bocker/index'
     end
 
 
