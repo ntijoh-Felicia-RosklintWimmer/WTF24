@@ -29,10 +29,9 @@ class App < Sinatra::Base
         @user = db.execute('SELECT * FROM users WHERE id = ?', user_id).first
         # @bok_user = db.execute('SELECT * FROM bok_user WHERE Id = ?', session[:user_id])
         erb :'userpage'
-
     end
 
-    get 'signup' do
+    get '/signup' do
         erb :'signup'
     end
 
@@ -40,18 +39,17 @@ class App < Sinatra::Base
         erb :'index'  
     end
 
-    post '/user/signup' do
+    post '/signup' do
         name = params['user_name']
         mail = params['user_email']
         password = params['password']
         hashed_password = BCrypt::Password.create(password)
         id = db.execute('INSERT INTO users (name, mail, password) VALUES (?,?,?) RETURNING *', name, mail, hashed_password).first['id']
         session[:user_id] = id
-        # redirect "/user/#{id}" #tidigare
         redirect "/user/#{id}" 
     end
 
-    post '/user/login' do
+    post '/login' do
         mail = params['user_email']
         password = params['password']
         user = db.execute('SELECT * FROM users WHERE mail = ?', mail).first
@@ -59,7 +57,7 @@ class App < Sinatra::Base
         if user == nil
             p "No user found"
             # redirect "/login/login" tidigare
-            redirect "signup"
+            redirect "/signup"
         end
 
         password_from_db = BCrypt::Password.new(user['password'])
@@ -73,7 +71,7 @@ class App < Sinatra::Base
         end
     end
 
-    post '/user/logout' do 
+    post '/logout' do 
         session.destroy
         redirect "/"
     end
@@ -132,22 +130,25 @@ class App < Sinatra::Base
         redirect "/bocker/new" 
     end
 
-    get '/bocker/index/:id/edit' do |id| 
-        if session[:user_id] == nil
-            redirect "/bocker/index"
-        end
-        @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', id.to_i).first
-        erb :'bocker/edit'
-    end 
+    # get '/bocker/index/:id/edit' do |id| 
+    #     if session[:user_id] == nil
+    #         redirect "/bocker/index"
+    #     end
+    #     @bok_info = bocker.find(id)
+    #     erb :'bocker/edit'
+    # end 
 
-    post '/bocker/index/:id/update' do |id| 
-        if session[:user_id] == nil
-            redirect "/"
-        end
-        bocker = params['content']
-        db.execute('UPDATE bocker SET (content = ?) WHERE id = ?', bok, id)
-        redirect "/bocker/index/#{id}" 
-    end
+
+    # post '/bocker/index/:id/update' do |id| 
+    #     if session[:user_id] == nil
+    #         redirect "/"
+    #     end
+    #     id = params["id"]
+    #     name = params["name"]
+    #     description = params["description"]
+    #     bocker.update_with_image(id, name, bio, country, city, image_path)
+    #     redirect "/bocker/index/#{id}" 
+    # end
 
     post '/bocker/index/:id/delete' do |id| 
         if session[:user_id] == nil
@@ -169,18 +170,23 @@ class App < Sinatra::Base
 
 #Helps so no html works in comments
 
-    # get '/comment/new' do 
-    #     # ...
-    # end
 
-    # post '/comment/new' do 
-    #     p params
-    #     name = params['name']
-    #     description = params['description']
-    #     db.execute('INSERT INTO bok_user (name, description) VALUES (?,?)', name, description)
-    #     #result = db.execute(name, author, description).first 
-    #     redirect "/comment/new" 
-    # end
+    get '/comments/new' do 
+        if session[:user_id] != nil
+            redirect 'comments/new'
+        else
+            redirect "/bocker/index"
+        end
+    end
+
+    post '/comments/new' do 
+        p params
+        name = params['name']
+        description = params['description']
+        db.execute('INSERT INTO bok_user (name, description) VALUES (?,?)', name, description)
+        #result = db.execute(name, author, description).first 
+        redirect "/comments/new" 
+    end
 
     helpers do
         def h(text)

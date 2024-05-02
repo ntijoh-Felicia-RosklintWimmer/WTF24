@@ -9,7 +9,7 @@
 
 <body>    
     <main>
-        <form class="formbox" action="/user/login" method="post">
+        <form class="formbox" action="/login" method="post">
             <div class="form-list">
                 <label for="mail">Email:</label><input type="email" id="mail" name="user_email" ><br />
                 <label for="password">Lösenord:</label><input type="Password" id="mail" name="password" ><br />
@@ -21,7 +21,8 @@
             <div class="message"></div>
         </form>
         <p>Don't have an account?<a href="/signup">Create one here</a></p>
-        <form class="formbox" action="/user/logout" method="post">
+
+        <form class="formbox" action="/logout" method="post">
             <div class="button">
                 <button type="submit" value="submit">Log out</button>
             </div>

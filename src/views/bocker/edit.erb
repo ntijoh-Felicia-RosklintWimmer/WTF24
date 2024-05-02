@@ -1,8 +1,21 @@
-<form action='/messages/<%=@message['id']%>/update' method='post'> 
-  <input type='text' name='content' value='<%= @message['content']%>'></input> 
-  <button type='submit'>Send</button>
-</form>
+  <h2>Edit <%= @artist_info["name"]%>:</h2>
+    <form action="/bocker/edit" method="post" enctype="multipart/form-data">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="<%= html_escape(@artist_info["name"]) %>" required><br>
 
-<form action='/messages/<%= @message['id'] %>/delete' method='post'> 
-  <button type="submit">DELETE</button>
-</form>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4" required><%= html_escape(@artist_info["bio"]) %></textarea><br>
+        
+        <button type="submit">Update book</button>
+    </form>
+
+
+
+<% @bocker.each do |bok| %>
+    <ul>
+        <a href="/bocker/<%= bok['id'] %>"><%= artist['name'] %> </a>
+       <form action='/artist/remove/<%= artist["id"] %>' method='post'> 
+        <button type="submit">DELETE</button>
+       </form>
+    </ul>
+<% end %>
