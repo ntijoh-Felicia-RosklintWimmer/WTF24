@@ -96,11 +96,9 @@ class App < Sinatra::Base
 
 #Sida 2.0 Alla böcker 
     get '/bocker/new' do 
-        if session[:user_id] != nil
-            redirect 'bocker/new'
-        else
-            redirect "/bocker/index"
-        end
+        redirect "/bocker/index" unless session[:user_id]      
+        erb :'/bocker/new'
+  
     end
 
     get '/bocker/index' do 
@@ -112,6 +110,7 @@ class App < Sinatra::Base
         print("id " + bok)
         @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', bok)
         @sing = 1
+        @comments = db.execute('SELECT * FROM bok_user')
         erb :'/bocker/index'
     end
 
@@ -154,7 +153,6 @@ class App < Sinatra::Base
         if session[:user_id] == nil
             redirect "/"
         end
-
         db.execute('DELETE FROM bocker WHERE id = ?', id)
         redirect "/bocker/"
     end
@@ -172,11 +170,8 @@ class App < Sinatra::Base
 
 
     get '/comments/new' do 
-        if session[:user_id] != nil
-            redirect 'comments/new'
-        else
-            redirect "/bocker/index"
-        end
+        redirect "/bocker/index" unless session[:user_id]
+        erb :'/comments/new'
     end
 
     post '/comments/new' do 
