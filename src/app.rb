@@ -11,10 +11,19 @@ class App < Sinatra::Base
         end
         return @db
     end
-    
+
+    helpers do
+        def h(text)
+            Rack::Utils.escape_html(text)
+        end
+
+        def hattr(text)
+            Rack::Utils.escape_path(text)
+        end
+    end
 
     get '/' do
-        @result = db.execute('SELECT * FROM bocker')
+        @result = Book.all()# db.execute('SELECT * FROM bocker')
         erb :'index'
     end
 
@@ -90,7 +99,6 @@ class App < Sinatra::Base
     get '/about' do
         erb :'about'
     end
-    #Länka till inloggning
 
 #Sida 1.3 Logga in admin - ej klart 
 
@@ -98,7 +106,6 @@ class App < Sinatra::Base
     get '/bocker/new' do 
         redirect "/bocker/index" unless session[:user_id]      
         erb :'/bocker/new'
-  
     end
 
     get '/bocker/index' do 
@@ -107,90 +114,70 @@ class App < Sinatra::Base
     end
 
     get '/bocker/index/:bok' do |bok|
+        if session[:user_id] != nil
+            @userCheck = 1
+        else
+            @userCheck = 0
+        end
         print("id " + bok)
         @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', bok)
         @sing = 1
-        @comments = db.execute('SELECT * FROM bok_user')
+        @comments = db.execute('SELECT * FROM bok_user WHERE bok_id = ?', bok)
         erb :'/bocker/index'
     end
 
 
     # Använd kortare routs som bara new
-    # Skapa if satser så att formuläret inte ens är synligt för användare utan log in
     # Skapa mappar för olika funktioner i app
     # skapa mappar för olika new, add osv för comment, böcker, writers osv.
     post '/bocker/new' do 
-        p params
-        name = params['name']
+        if session[:user_id] == nil
+            redirect "/"
+        end        name = params['name']
         author = params['author']
         description = params['description']
         db.execute('INSERT INTO bocker (name, author, description) VALUES (?,?,?)', name, author, description)
         #result = db.execute(name, author, description).first 
-        redirect "/bocker/new" 
+        redirect "/bocker/index" 
     end
 
-    # get '/bocker/index/:id/edit' do |id| 
-    #     if session[:user_id] == nil
-    #         redirect "/bocker/index"
-    #     end
-    #     @bok_info = bocker.find(id)
-    #     erb :'bocker/edit'
-    # end 
+   
+    get '/bocker/:id/edit' do |id| 
+        @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', id.to_i).first
+        erb :'bocker/edit'
+      end
 
-
-    # post '/bocker/index/:id/update' do |id| 
-    #     if session[:user_id] == nil
-    #         redirect "/"
-    #     end
-    #     id = params["id"]
-    #     name = params["name"]
-    #     description = params["description"]
-    #     bocker.update_with_image(id, name, bio, country, city, image_path)
-    #     redirect "/bocker/index/#{id}" 
-    # end
+    post '/bocker/index/:id/update' do |id| 
+        if session[:user_id] == nil
+            redirect "/"
+        end
+        id = params["id"]
+        description = params["description"]
+        db.execute('UPDATE bocker SET description = ? WHERE id = ?', description, id)
+        redirect "/bocker/index/#{id}" 
+    end
 
     post '/bocker/index/:id/delete' do |id| 
         if session[:user_id] == nil
             redirect "/"
         end
         db.execute('DELETE FROM bocker WHERE id = ?', id)
-        redirect "/bocker/"
-    end
-
-#Sida 2.1 Bok med titel, komentarer, rekomendation
-
-#Sida 3.0 Profil inloggad användare
-    # post '/user/profile' do 
-
-    # end
-
-#Sida 3.1 Profil admin
-
-#Helps so no html works in comments
-
-
-    get '/comments/new' do 
-        redirect "/bocker/index" unless session[:user_id]
-        erb :'/comments/new'
+        db.execute('DELETE FROM bok_user WHERE bok_id = ?', id)
+        redirect "/bocker/index"
     end
 
     post '/comments/new' do 
+        if session[:user_id] == nil
+            redirect "/"
+        end
         p params
-        name = params['name']
-        description = params['description']
-        db.execute('INSERT INTO bok_user (name, description) VALUES (?,?)', name, description)
+        name = params['username']
+        bok_id = params['bok_id']
+        comment = params['comment']
+        rating = params['rating']
+        db.execute('INSERT INTO bok_user (name, bok_id, comment, rating) VALUES (?,?,?,?)', name, bok_id, comment, rating)
         #result = db.execute(name, author, description).first 
-        redirect "/comments/new" 
-    end
-
-    helpers do
-        def h(text)
-            Rack::Utils.escape_html(text)
-        end
-
-        def hattr(text)
-            Rack::Utils.escape_path(text)
-        end
+        redirect "/bocker/index" 
     end
 
 end

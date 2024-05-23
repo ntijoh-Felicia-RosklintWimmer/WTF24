@@ -15,14 +15,53 @@
           <h2> <%= bok['name'] %> </h2>
           <p>Author: <%= bok['Author'] %></p>
           <p>Description: <%= bok['description'] %></p>
-          <p><a href="/comments/new">Add your comment and rating of the book!</a></p>
-          <%# <% @comments.each do |comment|%>
-              <%# <p> <%= Name['username'] </p>
-              <p>Comment: <%= ['comment']</p>
-              <p>Rating: <%= ['rating']</p> %>
-          <%# <% end%> 
-      <% end
-    <p><a href="/bocker/index">Show me all bocker!</a></p>
+          
+          <% if @comments %> 
+              <% @comments.each do |comment|%>
+              <p>User: <%= comment['name'] %></p>
+              <p>Comment: <%= comment['comment'] %></p>
+              <p>Rating: <%= comment['rating'] %></p>
+              <%end%>
+          <%end%>
+          
+          
+          <% if @userCheck == 1 %> 
+            <form class="formbox" action="/bocker/index/<%=bok['id']%>/update" method="post">
+            <label for="name">Description-update:</label><input type="text" id="description" name="description" ><br />   
+                <div class="button">
+                    <button type="submit" value="submit">Update the description of the book.</button>
+                </div>
+                <div class="message"></div>
+            </form>
+
+            <form class="formbox" action="/comments/new" method="post">
+                <label for="name">Your username:</label><input type="text" id="username" name="username" ><br />
+                <label for="name">Comment:</label><input type="text" id="comment" name="comment" ><br />   
+                    Rate this book:
+                    1 <input type="radio" name="rating" value="1" />
+                    2 <input type="radio" name="rating" value="2" />
+                    3 <input type="radio" name="rating" value="3" />
+                    4 <input type="radio" name="rating" value="4" />
+                    5 <input type="radio" name="rating" value="5" />
+                <input type="hidden" id="bok_id" name="bok_id" value="<%= bok['id'] %>">
+                <div class="message"></div>
+                <div class="button">
+                    <button type="submit" value="submit">Add the comment</button>
+                </div> 
+            </form>
+            
+
+            <form class="formbox" action="/bocker/index/<%=bok['id']%>/delete" method="post">
+                <div class="button">
+                    <button type="submit" value="submit">Delete book and comments</button>
+                </div>
+                <div class="message"></div>
+            </form>
+
+
+          <%end%> 
+      <% end %>
+      <p><a href="/bocker/index">Show me all books!</a></p>
   <% else %>
     <p>No books found.</p>
   <% end %>
