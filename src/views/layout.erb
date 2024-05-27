@@ -12,7 +12,9 @@
             <a href="/">Start sida & log in</a><br/>
             <a href="/about">Lite om oss</a><br />
             <a href="/bocker/index">Alla böcker</a><br />
-            <a href="/user">Profil</a><br />
+            <% if @user != nil %> 
+                <a href="/userpage/<%=@user['id']%>">Profil</a><br />
+            <%end%>
         </ul>
     </nav>
 

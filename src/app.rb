@@ -1,16 +1,12 @@
 require 'debug'
 require_relative 'db/seed'
+
+require_relative './modules/user'
+require_relative './modules/bocker'
+require_relative './modules/comment'
 class App < Sinatra::Base
 
     enable :sessions
-
-    def db
-        if @db == nil
-            @db = SQLite3::Database.new('db/bocker.sqlite')#Sätt in namnet på databasen
-            @db.results_as_hash = true
-        end
-        return @db
-    end
 
     helpers do
         def h(text)
@@ -22,83 +18,165 @@ class App < Sinatra::Base
         end
     end
 
+    # get '/' do
+    #     @result = db.execute('SELECT * FROM bocker')
+    #     erb :'index'
+    # end
+
     get '/' do
-        @result = Book.all()# db.execute('SELECT * FROM bocker')
+        # @user = User.find(session[:user_id])
+        # @result = Bocker.all
+        if session[:user_id] != nil
+            @user = User.get_user_info(session[:user_id])
+        end
+
         erb :'index'
     end
 
-    
 
     get '/reseed' do
         Seeder.seed!
         redirect "/"
     end
     
-
-    #Sida 1.1 Skapa konto/logga in - Klart
-    get '/user/:id' do |user_id|  
-        @user = db.execute('SELECT * FROM users WHERE id = ?', user_id).first
-        # @bok_user = db.execute('SELECT * FROM bok_user WHERE Id = ?', session[:user_id])
-        erb :'userpage'
-    end
-
-    get '/signup' do
+    get '/signup' do 
         erb :'signup'
-    end
+    end    
 
-    get 'login' do
-        erb :'index'  
-    end
-
-    post '/signup' do
-        name = params['user_name']
+    post '/signup' do 
+        # Retrieve the username and password from the form
+        name = params['name']
         mail = params['user_email']
         password = params['password']
-        hashed_password = BCrypt::Password.create(password)
-        id = db.execute('INSERT INTO users (name, mail, password) VALUES (?,?,?) RETURNING *', name, mail, hashed_password).first['id']
+        # password_confirm = params["confirm_password"]
+
+        # Check if passwords match
+        # if password != password_confirm
+        #     session[:error_message] = "Passwords do not match"
+        #     redirect '/register'
+        # end
+        hashed_password = BCrypt::Password.create(password)     
+        id = User.register(name, mail, BCrypt::Password.create(password))
         session[:user_id] = id
-        redirect "/user/#{id}" 
+        redirect "/userpage/#{id}" 
     end
 
-    post '/login' do
+    get '/login' do 
+        erb :'/'
+    end
+
+    post '/login' do 
+        # Retrieve the username and password from the form
         mail = params['user_email']
         password = params['password']
-        user = db.execute('SELECT * FROM users WHERE mail = ?', mail).first
-        
-        if user == nil
-            p "No user found"
-            # redirect "/login/login" tidigare
-            redirect "/signup"
-        end
-
-        password_from_db = BCrypt::Password.new(user['password'])
-
-        if password_from_db == password 
-            session[:user_id] = user['id'] 
-            redirect "/user/#{session[:user_id]}"
+        user_id = User.login(mail, password)
+        if (user_id)
+            session[:user_id] = user_id      
+            redirect "/userpage/#{user_id}" 
         else
-            p "Failed login"
-            redirect "/"
+            session[:error_message] = "Password is incorrect"
+            redirect '/'        
         end
     end
 
-    post '/logout' do 
-        session.destroy
-        redirect "/"
-    end
-    
-    get '/user' do 
+    get '/userpage/:id' do |id|
         if session[:user_id] != nil
-            redirect "/user/#{session[:user_id]}"
-        else
-            redirect "/"
+            @user = User.get_user_info(session[:user_id])
         end
-        
+        @user = User.get_user_info(id)
+        erb :userpage
     end
 
-#Sida 1.0
-    #Se info om sidan
+    get '/logout' do
+        if session[:user_id] != nil
+            logout = User.logout
+        end
+        redirect '/'
+    end
+
+    post '/logout'do 
+        if session[:user_id] != nil
+            session.destroy
+        end
+        redirect '/'
+    end
+
+
+
+
+
+
+
+
+
+
+
+#     get '/user/:id' do |user_id|  
+#         @user = User.find(user_id)
+#         # @bok_user = db.execute('SELECT * FROM bok_user WHERE Id = ?', session[:user_id])
+#         erb :'userpage'
+#     end
+
+#     get '/signup' do
+#         erb :'signup'
+#     end
+
+#     get 'login' do
+#         erb :'index'  
+#     end
+
+#     post '/signup' do
+#         name = params['user_name']
+#         mail = params['user_email']
+#         password = params['password']
+#         hashed_password = BCrypt::Password.create(password)
+#         id = db.execute('INSERT INTO users (name, mail, password) VALUES (?,?,?) RETURNING *', name, mail, hashed_password).first['id']
+#         session[:user_id] = id
+#         redirect "/user/#{id}" 
+#     end
+
+#     post '/login' do
+#         mail = params['user_email']
+#         password = params['password']
+#         user = db.execute('SELECT * FROM users WHERE mail = ?', mail).first
+        
+#         if user == nil
+#             p "No user found"
+#             # redirect "/login/login" tidigare
+#             redirect "/signup"
+#         end
+
+#         password_from_db = BCrypt::Password.new(user['password'])
+
+#         if password_from_db == password 
+#             session[:user_id] = user['id'] 
+#             redirect "/user/#{session[:user_id]}"
+#         else
+#             p "Failed login"
+#             redirect "/"
+#         end
+#     end
+
+#     post '/logout' do 
+#         session.destroy
+#         redirect "/"
+#     end
+    
+#     get '/user' do 
+#         if session[:user_id] != nil
+#             redirect "/user/#{session[:user_id]}"
+#         else
+#             redirect "/"
+#         end
+        
+#     end
+
+# #Sida 1.0
+#     #Se info om sidan
     get '/about' do
+        if session[:user_id] != nil
+            @user = User.get_user_info(session[:user_id])
+        end
         erb :'about'
     end
 
@@ -111,7 +189,10 @@ class App < Sinatra::Base
     end
 
     get '/bocker/index' do 
-        @bocker = db.execute('SELECT * FROM bocker')
+        if session[:user_id] != nil
+            @user = User.get_user_info(session[:user_id])
+        end
+        @bocker = Bocker.all
         erb :'bocker/index'
     end
 
@@ -122,9 +203,10 @@ class App < Sinatra::Base
             @userCheck = 0
         end
         print("id " + bok)
-        @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', bok)
+        @bocker = [Bocker.find(bok)]
         @sing = 1
-        @comments = db.execute('SELECT * FROM bok_user WHERE bok_id = ?', bok)
+        @comments = Comment.find(bok)
+        @comment = Comment.find(bok)
         erb :'/bocker/index'
     end
 
@@ -132,54 +214,105 @@ class App < Sinatra::Base
     # Använd kortare routs som bara new
     # Skapa mappar för olika funktioner i app
     # skapa mappar för olika new, add osv för comment, böcker, writers osv.
-    post '/bocker/new' do 
-        if session[:user_id] == nil
-            redirect "/"
-        end        name = params['name']
-        author = params['author']
-        description = params['description']
-        db.execute('INSERT INTO bocker (name, author, description) VALUES (?,?,?)', name, author, description)
-        #result = db.execute(name, author, description).first 
-        redirect "/bocker/index" 
-    end
+    # post '/bocker/new' do 
+    #     if session[:user_id] == nil
+    #         redirect "/"
+    #     end        
+    #     name = params['name']
+    #     author = params['author']
+    #     description = params['description']
+    #     db.execute('INSERT INTO bocker (name, author, description) VALUES (?,?,?)', name, author, description)
+    #     #result = db.execute(name, author, description).first 
+    #     redirect "/bocker/index" 
+    # end
 
    
-    get '/bocker/:id/edit' do |id| 
-        @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', id.to_i).first
-        erb :'bocker/edit'
-      end
+    # get '/bocker/:id/edit' do |id| 
+    #     @bocker = db.execute('SELECT * FROM bocker WHERE id = ?', id.to_i).first
+    #     erb :'bocker/edit'
+    # end
 
-    post '/bocker/index/:id/update' do |id| 
-        if session[:user_id] == nil
-            redirect "/"
-        end
-        id = params["id"]
-        description = params["description"]
-        db.execute('UPDATE bocker SET description = ? WHERE id = ?', description, id)
-        redirect "/bocker/index/#{id}" 
+    # post '/bocker/index/:id/update' do |id| 
+    #     if session[:user_id] == nil
+    #         redirect "/"
+    #     end
+    #     @Bok = Bocker.edit
+    #     redirect "/bocker/index/#{id}" 
+    # end
+
+
+    #create a book
+
+    get '/bocker/new' do
+        erb :'bocker/new'
     end
 
-    post '/bocker/index/:id/delete' do |id| 
-        if session[:user_id] == nil
-            redirect "/"
-        end
-        db.execute('DELETE FROM bocker WHERE id = ?', id)
-        db.execute('DELETE FROM bok_user WHERE bok_id = ?', id)
+    post '/bocker/new' do
+        if (session[:user_id] != nil)
+            name = params["name"]
+            author = params["author"] 
+            description = params["description"]
+            bok_id = Bocker.add(name, author, description)
+            redirect "/bocker/index"
+        end    
         redirect "/bocker/index"
     end
 
-    post '/comments/new' do 
+    post '/bocker/index/:id/delete' do |id| 
+        Bocker.delete(id)
+        Comment.delete(id)
+        redirect "/bocker/index"
+    end
+        
+    get '/bocker/:id/edit' do |id|
+        @Bocker = Bocker.find(id)
+        erb :'bocker/edit'    
+    end
+
+    post '/bocker/index/:id/update' do |id|
+        description = params["description"]
+        Bocker.update(id, description)
+        redirect "/bocker/index/" + id
+    end
+
+    get '/bocker/view/:id' do |id|
+        @bok_id = Bocker.find(id)
+        erb :'bocker/index'
+    end
+
+    # post '/bocker/index/:id/delete' do |id| 
+    #     if session[:user_id] == nil
+    #         redirect "/"
+    #     end
+    #     db.execute('DELETE FROM bocker WHERE id = ?', id)
+    #     db.execute('DELETE FROM bok_user WHERE bok_id = ?', id)
+    #     redirect "/bocker/index"
+    # end
+
+
+    # post '/comments/new' do 
+    #     if session[:user_id] == nil
+    #         redirect "/"
+    #     end
+    #     p params
+    #     name = params['username']
+    #     bok_id = params['bok_id']
+    #     comment = params['comment']
+    #     rating = params['rating']
+    #     db.execute('INSERT INTO bok_user (name, bok_id, comment, rating) VALUES (?,?,?,?)', name, bok_id, comment, rating)
+    #     redirect "/bocker/index" 
+    # end
+
+    post  '/comments/new' do
         if session[:user_id] == nil
             redirect "/"
         end
-        p params
         name = params['username']
         bok_id = params['bok_id']
         comment = params['comment']
-        rating = params['rating']
-        db.execute('INSERT INTO bok_user (name, bok_id, comment, rating) VALUES (?,?,?,?)', name, bok_id, comment, rating)
-        #result = db.execute(name, author, description).first 
-        redirect "/bocker/index" 
+        rating =params['rating']
+        @Comment = Comment.create(name, bok_id, comment, rating)
+        redirect "/bocker/index/#{bok_id}"
     end
 
 end
